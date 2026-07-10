@@ -15,7 +15,7 @@ The document needs to serve people doing different but connected work:
 - Verification and validation: success criteria, methods, evidence, status, and closure.
 - Compliance and interpretation: exact source language, incorporated references, ambiguities, conflicts, and rationale.
 
-Because this is a draft RFP, every extracted record should carry `baseline_status: "solicitation"`. A future proposal, negotiation, contract award, modification, or approved provider document is a different baseline and must not silently overwrite this one.
+Because this is a draft RFP published for industry feedback, every extracted record should carry `baseline_status: "draft_rfp"`. A future proposal, negotiation, final solicitation, contract award, modification, or approved provider document is a different baseline and must not silently overwrite this one.
 
 One useful critique of the acquisition is:
 
@@ -25,15 +25,15 @@ Treat that as a hypothesis to test with data, not a conclusion to encode. The re
 
 ## Source document
 
-Local working copy:
+Authoritative public source: [Commercial Low Earth Orbit (LEO) Destination Contract (CLDC) Draft Request for Proposal on SAM.gov](https://sam.gov/workspace/contract/opp/19a8a55c066441ef891e33bac770dd9d/view).
 
-```text
-/Users/chris/Downloads/03_CLDC+Integrated+DRD+July+2026.pdf
-```
+SAM.gov identifies the notice as `80JSC026R0021DRFP`, published July 6, 2026 by NASA Johnson Space Center. The notice is a Sources Sought posting for information, planning, and industry feedback; it explicitly states that it is not a request for proposals.
 
 Observed source facts:
 
-- File: `03_CLDC+Integrated+DRD+July+2026.pdf`
+- Public attachment: `03_CLDC Integrated DRD July 2026.pdf`
+- SAM.gov access classification: Public
+- SAM.gov listed size: 2.25 MB
 - PDF pages: 246
 - PDF metadata creation/modification date: 2026-07-02
 - SHA-256: `443c2ceaef75b5560dc310a22e584c3f4a964802d1095b6d29e9a589171df3e0`
@@ -41,7 +41,7 @@ Observed source facts:
 - Data Requirements List (DRL): pages 7-9
 - DRD definitions: pages 10-246
 
-Do not commit the source PDF or a full-text derivative to a public repository until its publication source and redistribution posture have been recorded. Findings, hashes, locators, schemas, and extraction code can be published independently.
+Use the SAM.gov notice and attachment name as the public citation rather than a workstation path. The attachment is listed as Public, but whether to redistribute the PDF or a full-text derivative in this repository remains a separate project decision. Findings, hashes, locators, schemas, and extraction code can be published independently.
 
 ## Initial inventory
 
@@ -129,7 +129,7 @@ If a later baseline moves unchanged text, retain the requirement ID and update i
   "id": "CLDC-001-REQ-0001",
   "family_id": "CLDC-001",
   "source_item_id": "CLDC-001-SRC-0001",
-  "baseline_status": "solicitation",
+  "baseline_status": "draft_rfp",
   "source": {
     "document_sha256": "443c2ceaef75b5560dc310a22e584c3f4a964802d1095b6d29e9a589171df3e0",
     "page": 10,
@@ -191,7 +191,7 @@ Docling preserved the DRD body structure well. It did **not** reconstruct the th
 Reproduce the intermediate conversion:
 
 ```bash
-PDF='/Users/chris/Downloads/03_CLDC+Integrated+DRD+July+2026.pdf'
+PDF="${PDF:?Set PDF to the downloaded '03_CLDC Integrated DRD July 2026.pdf'}"
 mkdir -p tmp/docling
 docling "$PDF" \
   --from pdf \
@@ -214,7 +214,7 @@ Docling fields worth retaining include `orig`, `text`, `label`, `prov`, `bbox`, 
 
 Start with deterministic source normalization, not semantic atomization:
 
-1. Read this README and verify the source SHA-256 before processing.
+1. Read this README, obtain `03_CLDC Integrated DRD July 2026.pdf` from the linked SAM.gov notice, and verify its SHA-256 before processing.
 2. Reproduce the Docling JSON and layout-text intermediates under `tmp/`.
 3. Write the smallest practical `extract.py`, using the Python standard library to read Docling JSON.
 4. Build `families.json` from the 60 top-level DRD headers plus the 38 official child IDs in DRL pages 7-9.
