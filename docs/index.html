@@ -158,6 +158,15 @@ tr.r:hover td{background:var(--panel)}
 .rt .cta{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:8px 16px;font-size:13px;font-weight:600}
 .rt .cta:hover{text-decoration:none;filter:brightness(1.08)}
 .vetted{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 40%,transparent);border-radius:99px;padding:2px 8px;text-transform:uppercase}
+/* questions */
+.qsubmit{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.qprompt{flex:1;min-width:240px;background:var(--panel2);border:1px dashed var(--line);border-radius:10px;padding:11px 14px;color:var(--ink3);font-size:14px}
+.qsubmit .cta{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600}
+.qsubmit .cta:hover{text-decoration:none;filter:brightness(1.08)}
+.qarow{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.qat{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.qq{font-size:14px;font-weight:600}
+.qa-a{font-family:var(--serif);font-size:13.5px;color:var(--ink2);margin-top:5px;border-left:2px solid var(--t2);padding-left:10px}
 /* footer */
 #baseline{position:fixed;bottom:0;left:0;right:0;z-index:60;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink3);padding:8px 24px;text-align:center}
 footer{padding:44px 0 60px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
@@ -172,7 +181,7 @@ footer code{font-family:var(--mono);font-size:11px}
   <div class="links">
     <a href="#deliverables">Deliverables</a><a href="#echo">Recurrence</a><a href="#browse">Browse</a>
     <a href="#refs">References</a><a href="#anoms">Anomalies</a><a href="#news">In the News</a>
-    <a href="#package">Response Package</a><a href="#agents">Agents</a><a href="#industry">Industry Day</a><a href="#providers">Assistance</a>
+    <a href="#questions">Q&amp;A</a><a href="#package">Response Package</a><a href="#agents">Agents</a><a href="#industry">Industry Day</a><a href="#providers">Assistance</a>
   </div>
   <a href="https://github.com/interplanetarychris/cldc-requirements" target="_blank" rel="noopener" class="ghlink" aria-label="GitHub repository" title="Extraction code &amp; JSONL registers on GitHub"><svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
   <span class="draftchip">DRAFT RFP</span>
@@ -263,6 +272,21 @@ footer code{font-family:var(--mono);font-size:11px}
     <p style="margin-top:14px">Weigh the claim against the data: <a href="#deliverables">53 of 98 approval-gated deliverables</a> ·
     <a href="#echo">30% recurring boilerplate</a> · <a href="#refs">94 incorporated documents</a>.</p>
   </div>
+</div></section>
+
+<section id="questions"><div class="wrap">
+  <div class="h2row"><h2>Questions to NASA</h2><span class="chip mock">mock module · illustrative entries</span></div>
+  <p class="secnote">Draft-RFP questions go through the official channel, and answers usually come back as
+  amendments buried in attachment lists. A modern solicitation would accept questions where offerors read the
+  requirements and publish every answer beside the records it affects.</p>
+  <div class="qsubmit">
+    <div class="qprompt">Ask about a requirement, a DRD, or a referenced document...</div>
+    <a class="cta" href="https://sam.gov/workspace/contract/opp/19a8a55c066441ef891e33bac770dd9d/view" target="_blank" rel="noopener">Submit via SAM.gov →</a>
+  </div>
+  <p style="font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin:8px 0 22px">
+    concept: also accepted as MCP tool <span style="color:var(--t2)">submit_question</span> · this page never collects your question, the official record does</p>
+  <h4 style="margin:0 0 10px;font-size:12px;font-family:var(--mono);letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;font-weight:600">Recently answered</h4>
+  <div id="qaRows"></div>
 </div></section>
 
 <section id="package"><div class="wrap">
@@ -502,6 +526,18 @@ $('#anomRows').innerHTML=D.anoms.filter(a=>a.type!=='extraction_repair').map(a=>
    <span class="rid">${a.fam||'—'}</span>
    <span>${a.type==='suspected_alias'?`Body heading prints <b>${a.printed}</b>; official register says <b>${a.official}</b> (PDF p. ${a.page})`:esc(a.d)}</span></div>`).join('')
   +`<div class="arow"><span class="st ok">REPAIRED</span><span class="rid">×54</span><span>Extraction repairs: 41 page-break joins, 13 same-page fragment joins — each recorded with original Docling refs.</span></div>`;
+
+/* questions (illustrative) */
+const QA=[
+ ['Q-014','Will the body headings printed CLDC-214.1 through 214.4 be corrected to match the DRL identifiers CLDC-211.1 through 211.4?','Yes. The discrepancy is a typographical error and will be corrected in the final RFP.','2026-07-09'],
+ ['Q-011','Can the Integrated Master Schedule (CLDC-001) native file be delivered in formats other than the scheduling tool named in the DRD?','NASA will accept any format that preserves logic links and resource loading. Confirm the specific tool with the CO before proposal submission.','2026-07-08'],
+ ['Q-007','Does the maintenance-by-resubmission clause require a full document reissue for editorial changes?','No. Editorial changes may be batched into the next scheduled resubmission unless the change affects requirements.','2026-07-08'],
+ ['Q-003','Are the CLDP program documents cited in the DRDs (for example CLDP-REQ-1130) available to offerors before award?','Yes. Current versions are posted to the CLDP reference library linked from the SAM.gov notice.','2026-07-07'],
+];
+$('#qaRows').innerHTML=QA.map(([id,q,a,d])=>
+ `<div class="qarow"><div class="qat"><span class="st ok">ANSWERED</span><span class="rid">${id}</span><span class="prov">${d}</span></div>
+  <div class="qq">${q}</div><div class="qa-a">${a}</div></div>`).join('')
+ +`<p style="font-family:var(--mono);font-size:10.5px;color:var(--ink3)">entries above are illustrative, written for this concept page and not from the official record</p>`;
 
 /* attachments */
 const ATTS=[['L-01','Price Template','price-template.schema.json'],['L-02','Past Performance Matrix','past-performance.schema.json'],
