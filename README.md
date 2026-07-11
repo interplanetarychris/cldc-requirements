@@ -330,3 +330,12 @@ First-pass answers from the current registers follow each question; unanswered i
 > Nothing to compare yet: only the `draft_rfp` baseline exists. The ID and `supersedes` rules above define how future baselines diff against it.
 
 The objective is not merely a bigger list. It is a defensible chain from exact source language to interpretation, implementation, evidence, risk, and change history.
+
+## License
+
+Code (`extract.py`, `site-build.py`, the `docs/` site) is licensed under the [MIT License](LICENSE).
+The data registers (`data/`, `docs/data/`) and the written analysis in this README are licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); please attribute
+"interplanetarychris, cldc-requirements, https://github.com/interplanetarychris/cldc-requirements".
+Verbatim CLDC source language quoted inside the data records is from a published US Government work
+(NASA draft RFP 80JSC026R0021DRFP) and is not claimed under either license.
