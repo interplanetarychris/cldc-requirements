@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "baseline_status": "draft_rfp",
+  "source": {
+    "public_notice": "80JSC026R0021DRFP",
+    "attachment": "03_CLDC Integrated DRD July 2026.pdf",
+    "sha256": "443c2ceaef75b5560dc310a22e584c3f4a964802d1095b6d29e9a589171df3e0",
+    "pages": 246,
+    "pdf_bytes": 2362892
+  },
+  "policy": {
+    "canonical_format": "JSONL",
+    "source_item_scope": "general pages 2-6 and DRD pages 10-246",
+    "mandatory_modalities": [
+      "shall",
+      "must",
+      "unambiguous required",
+      "imperative",
+      "inherited mandatory list/content"
+    ],
+    "nonmandatory_modalities": [
+      "should",
+      "may",
+      "will unless context establishes an obligation"
+    ],
+    "external_documents": "references only; requirements not recursively imported",
+    "reference_register": "group by normalized base identifier; retain all observed identifier, revision, title, and verbatim variants; retain unidentified items with reasons",
+    "quoted_notices": "count the reproduce-notice obligation; exclude modal language inside the notice",
+    "repeated_boilerplate": "count each applicable instance and report duplicate text patterns",
+    "headline_count_filter": {
+      "classification": "mandatory",
+      "review_status": "confirmed",
+      "countable": true
+    }
+  },
+  "tool_versions": {
+    "python": "3.14.6",
+    "docling": "Docling version: 2.85.0",
+    "docling_document_schema": "1.10.0",
+    "extractor": "extract.py schema 1.0"
+  },
+  "counts": {
+    "docling_text_blocks": 6199,
+    "docling_list_items": 2674,
+    "docling_groups": 1013,
+    "docling_tables": 49,
+    "top_level_drd_families": 60,
+    "official_drl_identifiers": 98,
+    "grouping_parents": 14,
+    "child_drds": 38,
+    "leaf_deliverables": 84,
+    "source_items": 5031,
+    "source_items_by_classification": {
+      "advisory": 39,
+      "commitment": 43,
+      "descriptive": 1744,
+      "explicit_mandatory": 707,
+      "inherited_mandatory": 2169,
+      "permission": 56,
+      "quoted": 5,
+      "reference": 268
+    },
+    "reference_instances": 268,
+    "reference_register_records": 104,
+    "unique_external_documents": 94,
+    "unique_external_documents_by_category": {
+      "cldp_program": 17,
+      "nasa_std": 17,
+      "npr": 11,
+      "npd": 2,
+      "jpr": 3,
+      "jsc": 2,
+      "far": 7,
+      "nfs": 6,
+      "mil_std": 1,
+      "internal_drd": 2,
+      "other": 26
+    },
+    "unresolved_reference_records": 10,
+    "unresolved_reference_items": 10,
+    "extraction_repairs": 54,
+    "page_break_repairs": 41,
+    "same_page_fragment_repairs": 13,
+    "confirmed_mandatory_requirements": 2995,
+    "unresolved_candidates": 0,
+    "duplicate_requirement_text_patterns": 225,
+    "anomalies": 60,
+    "lexical_occurrences": {
+      "shall": 736,
+      "must": 37,
+      "required": 192,
+      "should": 78,
+      "may": 107,
+      "will": 248
+    }
+  }
+}

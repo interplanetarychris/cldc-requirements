@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLDC Explorer — NASA Draft RFP Requirements</title>
+</head>
+<body>
+<style>
+:root{
+  --bg:#0E141F; --panel:#151D2C; --panel2:#1B2536; --line:#26324A;
+  --ink:#E8EDF4; --ink2:#9FACC2; --ink3:#66738C;
+  --accent:#FF5A2A; --accent-ink:#FFB49A;
+  --t1:#5B8DE0; --t2:#3FA98E; --t3:#9678D6;
+  --good:#4CAF7D; --warn:#E0A63C;
+  --serif:Charter,'Iowan Old Style',Georgia,serif;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#FAFBFD; --panel:#FFFFFF; --panel2:#F0F3F8; --line:#DDE3EE;
+  --ink:#1A2230; --ink2:#4A566C; --ink3:#7A869C;
+  --accent:#E8481A; --accent-ink:#B33006;
+  --t1:#3563B8; --t2:#1F8F6E; --t3:#7E5FC4;
+  --good:#217A4E; --warn:#9A6B12;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#FAFBFD; --panel:#FFFFFF; --panel2:#F0F3F8; --line:#DDE3EE;
+    --ink:#1A2230; --ink2:#4A566C; --ink3:#7A869C;
+    --accent:#E8481A; --accent-ink:#B33006;
+    --t1:#3563B8; --t2:#1F8F6E; --t3:#7E5FC4;
+    --good:#217A4E; --warn:#9A6B12;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;padding-bottom:52px}
+a{color:var(--accent-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:54px}
+.wordmark{font-family:var(--mono);font-weight:700;letter-spacing:.14em;font-size:14px}
+.wordmark b{color:var(--accent)}
+nav .links{display:flex;gap:16px;flex:1;overflow-x:auto;white-space:nowrap}
+nav .links a{color:var(--ink2);font-size:13px}
+nav .links a:hover{color:var(--ink);text-decoration:none}
+#themeBtn{background:var(--panel2);color:var(--ink2);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+.ghlink{display:flex;align-items:center;color:var(--ink2)}
+.ghlink:hover{color:var(--ink);text-decoration:none}
+.draftchip{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);border-radius:99px;padding:3px 9px}
+/* hero */
+header{padding:64px 0 40px}
+.official{font-size:13.5px;color:var(--ink2);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:10px 14px;max-width:720px;margin:0 0 22px}
+.official a{font-weight:600}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+h1{font-size:clamp(28px,4.4vw,46px);line-height:1.12;margin:0 0 14px;max-width:820px;letter-spacing:-.01em}
+.sub{color:var(--ink2);max-width:720px;font-size:16.5px;margin:0 0 34px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;cursor:pointer;transition:border-color .15s}
+.stat:hover{border-color:var(--accent)}
+.stat .num{font-family:var(--mono);font-size:34px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .lbl{color:var(--ink2);font-size:13px;margin-top:4px}
+.stat .note{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:8px;letter-spacing:.06em}
+/* sections */
+section{padding:44px 0;border-top:1px solid var(--line)}
+h2{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}
+.h2row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.secnote{color:var(--ink2);font-size:14px;margin:0 0 24px;max-width:760px}
+.chip{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--line);color:var(--ink3);border-radius:99px;padding:2px 9px;vertical-align:middle}
+.chip.policy{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent);cursor:help}
+.chip.mock{color:var(--t3);border-color:color-mix(in srgb,var(--t3) 45%,transparent)}
+/* treemap */
+#treemap{width:100%;height:420px;display:block}
+#treemap rect.cell{stroke:var(--bg);stroke-width:2;cursor:pointer}
+#treemap text{font-family:var(--mono);pointer-events:none}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;font-size:13px;color:var(--ink2)}
+.legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+/* minibars */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:22px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.tile h4{margin:0 0 10px;font-size:12px;font-family:var(--mono);letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;font-weight:600}
+.mrow{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:13px}
+.mrow .k{width:110px;color:var(--ink2);flex:none}
+.mrow .bar{height:8px;border-radius:4px;background:var(--t1);min-width:2px}
+.mrow .v{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+/* echo */
+.echo{display:grid;gap:10px}
+.erow{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;cursor:default}
+.erow:hover{border-color:var(--t2)}
+.erow .txt{font-family:var(--serif);font-size:14px;color:var(--ink)}
+.erow .meta{display:flex;align-items:center;gap:12px;margin-top:8px}
+.erow .ebar{height:7px;border-radius:4px;background:var(--t2)}
+.erow .n{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.dotstrip{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px}
+.dot{width:7px;height:7px;border-radius:2px;background:var(--panel2);border:1px solid var(--line)}
+.dot.on{background:var(--t2);border-color:var(--t2)}
+/* browse */
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#q{flex:1;min-width:220px;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:14px;font-family:var(--sans)}
+#q:focus{outline:none;border-color:var(--accent)}
+select{background:var(--panel);border:1px solid var(--line);color:var(--ink2);border-radius:10px;padding:9px 10px;font-size:13px;max-width:180px}
+.count{font-family:var(--mono);font-size:12px;color:var(--ink3);margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.r{cursor:pointer}
+tr.r:hover td{background:var(--panel)}
+.rid{font-family:var(--mono);font-size:12px;color:var(--accent-ink);white-space:nowrap}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;border-radius:5px;padding:1px 7px;background:var(--panel2);color:var(--ink2);white-space:nowrap}
+.tag.shall{color:var(--t1)} .tag.inherited{color:var(--t2)} .tag.must{color:var(--accent-ink)}
+.tblwrap{overflow-x:auto}
+/* drawer */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);background:var(--panel);border-left:1px solid var(--line);z-index:90;transform:translateX(102%);transition:transform .22s ease;overflow-y:auto;padding:26px 28px 90px;box-shadow:-20px 0 60px rgba(0,0,0,.35)}
+#drawer.open{transform:none}
+#drawer .close{position:absolute;top:14px;right:16px;background:var(--panel2);border:1px solid var(--line);color:var(--ink2);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
+.verbatim{font-family:var(--serif);font-size:15.5px;line-height:1.65;background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 16px;margin:14px 0}
+.prov{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.04em}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:13px;margin:14px 0}
+.kv .k{color:var(--ink3);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+/* references */
+.refrow{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px;cursor:pointer}
+.refrow:hover{border-color:var(--t1)}
+.refrow .top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.refrow .doc{font-family:var(--mono);font-size:13px;font-weight:700}
+.refrow .rbar{height:8px;border-radius:4px;background:var(--t1)}
+.refrow .exp{display:none;margin-top:10px;font-size:13px;color:var(--ink2)}
+.refrow.open .exp{display:block}
+.famchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.famchips .chip{cursor:default}
+/* anomalies */
+.arow{display:flex;gap:14px;align-items:baseline;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13.5px}
+.st{font-family:var(--mono);font-size:10px;letter-spacing:.08em;border-radius:5px;padding:2px 8px;flex:none}
+.st.open{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.st.ok{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+/* cards / mock zones */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.card h3{margin:0 0 8px;font-size:16px}
+.card p{margin:0;color:var(--ink2);font-size:13.5px}
+.news{border-left:3px solid var(--accent)}
+.news blockquote{font-family:var(--serif);font-size:17px;line-height:1.6;margin:14px 0;color:var(--ink)}
+.news .attr{font-size:13px;color:var(--ink2)}
+.att{display:flex;align-items:center;gap:14px}
+.att .xls{flex:none;width:38px;height:44px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--t2);font-weight:700}
+.att .nm{font-size:13.5px}
+.att .schema{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:3px}
+.pcard .scopeln{font-size:12.5px;color:var(--ink2);margin-top:8px}
+.pcard .intent{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--t2);text-transform:uppercase}
+/* riskthing ad */
+.rt{display:flex;gap:20px;align-items:flex-start;background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin-top:16px}
+.rt img,.rt svg{flex:none;border-radius:12px}
+.rt h3{margin:0 0 6px;font-size:18px}
+.rt .tagline{font-family:var(--serif);font-style:italic;color:var(--ink);font-size:15px;margin:0 0 8px}
+.rt p{color:var(--ink2);font-size:13.5px;margin:0 0 10px}
+.rt .cta{display:inline-block;background:var(--accent);color:#fff;border-radius:9px;padding:8px 16px;font-size:13px;font-weight:600}
+.rt .cta:hover{text-decoration:none;filter:brightness(1.08)}
+.vetted{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 40%,transparent);border-radius:99px;padding:2px 8px;text-transform:uppercase}
+/* footer */
+#baseline{position:fixed;bottom:0;left:0;right:0;z-index:60;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink3);padding:8px 24px;text-align:center}
+footer{padding:44px 0 60px;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--line)}
+footer code{font-family:var(--mono);font-size:11px}
+#tt{position:fixed;z-index:100;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:12px;max-width:300px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+#tt .t1{font-family:var(--mono);font-size:11px;color:var(--accent-ink)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<nav><div class="wrap">
+  <span class="wordmark">CLDC<b>/</b>EXPLORER</span>
+  <div class="links">
+    <a href="#deliverables">Deliverables</a><a href="#echo">Recurrence</a><a href="#browse">Browse</a>
+    <a href="#refs">References</a><a href="#anoms">Anomalies</a><a href="#news">In the News</a>
+    <a href="#package">Response Package</a><a href="#agents">Agents</a><a href="#industry">Industry Day</a><a href="#providers">Assistance</a>
+  </div>
+  <a href="https://github.com/interplanetarychris/cldc-requirements" target="_blank" rel="noopener" class="ghlink" aria-label="GitHub repository" title="Extraction code &amp; JSONL registers on GitHub"><svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+  <span class="draftchip">DRAFT RFP</span>
+  <button id="themeBtn">◐ theme</button>
+</div></nav>
+
+<header class="wrap">
+  <div class="kicker">80JSC026R0021DRFP · NASA Johnson Space Center · July 2026</div>
+  <h1>Every data obligation in NASA's Commercial LEO Destination draft contract, traceable to its source page.</h1>
+  <p class="official">This page is not official. It is a citizen concept built from the public record.
+  <a href="https://sam.gov/workspace/contract/opp/19a8a55c066441ef891e33bac770dd9d/view" target="_blank" rel="noopener">NASA's official RFP on SAM.gov →</a></p>
+  <p class="sub">The Integrated Data Requirements Document is a 246-page PDF. This explorer renders its
+  requirements register so that offerors, NASA, and the public read the same contract the same way.
+  Every record links back to the exact page it came from.</p>
+  <div class="stats">
+    <div class="stat" data-go="browse"><div class="num" data-count="2995">0</div><div class="lbl">mandatory obligations</div><div class="note">POLICY-DERIVED · MACHINE PASS</div></div>
+    <div class="stat" data-go="deliverables"><div class="num" data-count="84">0</div><div class="lbl">leaf deliverables (98 DRD identifiers)</div><div class="note">DRL PAGES 7–9</div></div>
+    <div class="stat" data-go="deliverables"><div class="num" data-count="53">0</div><div class="lbl">of 98 DRDs require Government approval</div><div class="note">DATA TYPE 1</div></div>
+    <div class="stat" data-go="refs"><div class="num" data-count="94">0</div><div class="lbl">external documents incorporated by reference</div><div class="note">268 CITATION INSTANCES</div></div>
+  </div>
+</header>
+
+<section id="deliverables"><div class="wrap">
+  <div class="h2row"><h2>Deliverables by requirement count</h2><span class="chip policy" title="Counts derive from the project's documented counting policy applied mechanically; individual records are not yet human-reviewed.">policy-derived</span></div>
+  <p class="secnote">Each cell is one deliverable, sized by its requirement count and colored by NASA Data Type:
+  does NASA <b>approve</b> it, <b>review</b> it, or simply <b>receive</b> it? Click a cell to browse its requirements.</p>
+  <svg id="treemap" role="img" aria-label="Treemap of deliverables sized by requirement count"></svg>
+  <div class="legend">
+    <span><span class="sw" style="background:var(--t1)"></span>Type 1 — NASA approval required</span>
+    <span><span class="sw" style="background:var(--t2)"></span>Type 2 — NASA review</span>
+    <span><span class="sw" style="background:var(--t3)"></span>Type 3 — delivered for information</span>
+    <span style="color:var(--ink3)">hatched = mixed type</span>
+  </div>
+  <div class="tiles">
+    <div class="tile"><h4>Who carries the obligation</h4><div id="actorBars"></div></div>
+    <div class="tile"><h4>How it's stated</h4><div id="modBars"></div></div>
+    <div class="tile"><h4>Where it lives in each DRD</h4><div id="secBars"></div></div>
+  </div>
+</div></section>
+
+<section id="echo"><div class="wrap">
+  <div class="h2row"><h2>The echo: recurring boilerplate</h2><span class="chip">888 of 2,995 obligations (~30%) are repeated text</span></div>
+  <p class="secnote">The same sentence appears in dozens of DRDs, and each recurring clause counts once per deliverable
+  that carries it. Hover a clause to light up those deliverables on the 98-DRD strip.</p>
+  <div class="echo" id="echoRows"></div>
+</div></section>
+
+<section id="browse"><div class="wrap">
+  <div class="h2row"><h2>Browse the register</h2><span class="chip">full register · 2,995 records</span></div>
+  <p class="secnote">Full text search plus facets. Click any row for the verbatim source language and provenance.
+</p>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search requirements... (try risk, imagery, 30 days)">
+    <select id="fFam"><option value="">Family: all</option></select>
+    <select id="fActor"><option value="">Actor: all</option></select>
+    <select id="fMod"><option value="">Modality: all</option></select>
+    <select id="fSec"><option value="">Section: all</option></select>
+  </div>
+  <div class="count" id="rcount"></div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>ID</th><th>Requirement (analysis text)</th><th>Actor</th><th>Modality</th><th>Section</th><th>PDF p.</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+</div></section>
+
+<section id="refs"><div class="wrap">
+  <div class="h2row"><h2>Incorporated by reference</h2><span class="chip">94 documents · 268 citations</span></div>
+  <p class="secnote">The contract's effective size extends beyond the PDF. CLDP program documents dominate:
+  <span class="rid">CLDP-REQ-1130</span> alone is incorporated from 30 separate DRD families. Click a row to see the citing families and the title and revision variants observed in the source, which the register preserves rather than silently merging.</p>
+  <div id="refRows"></div>
+</div></section>
+
+<section id="anoms"><div class="wrap">
+  <div class="h2row"><h2>Anomaly log</h2><span class="chip">we show our repairs</span></div>
+  <p class="secnote">Every extraction repair and source discrepancy is recorded, including four DRD headings
+  whose printed numbers (CLDC-214.x) disagree with the official register (CLDC-211.x).</p>
+  <div id="anomRows"></div>
+</div></section>
+
+<section id="news"><div class="wrap">
+  <div class="h2row"><h2>In the news</h2><span class="chip mock">mock module</span></div>
+  <p class="secnote">Coverage and commentary from the space-industry press, linked to the records it discusses.</p>
+  <div class="card news">
+    <div class="kicker" style="margin-bottom:6px">ARS TECHNICA · JULY 10, 2026</div>
+    <h3><a href="https://arstechnica.com/space/2026/07/nasa-finally-releases-a-critical-planning-document-for-private-space-stations/" target="_blank" rel="noopener">NASA finally releases a critical planning document for private space stations →</a></h3>
+    <blockquote>"It's got all the requirements, deliverables, and clauses of a cost-plus contract, but they are stuffed into a firm fixed-price bag."</blockquote>
+    <div class="attr">— Phil McAlister, NASA's former chief of commercial spaceflight, who originally created NASA's private space station program</div>
+    <p style="margin-top:14px">Weigh the claim against the data: <a href="#deliverables">53 of 98 approval-gated deliverables</a> ·
+    <a href="#echo">30% recurring boilerplate</a> · <a href="#refs">94 incorporated documents</a>.</p>
+  </div>
+</div></section>
+
+<section id="package"><div class="wrap">
+  <div class="h2row"><h2>Response package</h2><span class="chip mock">mock module</span></div>
+  <p class="secnote">NASA issues offeror templates as Excel workbooks on the SAM.gov record. A modern RFP would
+  publish each workbook with a machine-readable schema so vendors can validate a response before they submit it. Below is how that could look.</p>
+  <div class="cards" id="attRows"></div>
+</div></section>
+
+<section id="agents"><div class="wrap">
+  <div class="h2row"><h2>Built for agents</h2><span class="chip mock">mock module</span></div>
+  <p class="secnote">Humans get the explorer. Agents get the same register in formats they can consume directly,
+  published alongside the PDF rather than in place of it.</p>
+  <div class="cards">
+    <div class="card"><h3>llms.txt + markdown mirror</h3>
+      <p>Every DRD as clean markdown at a stable URL like <code style="font-family:var(--mono);font-size:11.5px">/md/CLDC-116.md</code>, with an
+      <code style="font-family:var(--mono);font-size:11.5px">llms.txt</code> index so agents can discover the corpus without scraping the PDF.</p></div>
+    <div class="card"><h3>JSONL registers</h3>
+      <p>The five registers (<code style="font-family:var(--mono);font-size:11.5px">requirements · source-items · references · anomalies · families</code>)
+      served raw with provenance and the source SHA-256, one record per line.</p></div>
+    <div class="card"><h3>MCP server</h3>
+      <p style="margin-bottom:8px">Query the register from Claude, or any MCP client:</p>
+      <pre style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10.5px;line-height:1.5;overflow-x:auto;margin:0">{
+  "mcpServers": {
+    "cldc-requirements": {
+      "url": "https://cldc.example.gov/mcp"
+    }
+  }
+}</pre>
+      <p style="margin-top:8px;font-family:var(--mono);font-size:10.5px;color:var(--ink3)">tools: search_requirements · get_drd · trace_provenance · list_references</p></div>
+  </div>
+</div></section>
+
+<section id="industry"><div class="wrap">
+  <div class="h2row"><h2>Industry day participants</h2><span class="chip mock">mock module · illustrative entries</span></div>
+  <p class="secnote">A public roster where participants declare their intended response scope and partnership
+  interests, so the information doesn't live in emailed PDFs. Entries below are illustrative placeholders, not actual declarations.</p>
+  <div class="cards" id="pcards"></div>
+</div></section>
+
+<section id="providers"><div class="wrap">
+  <div class="h2row"><h2>Assistance providers</h2><span class="chip mock">concept module</span></div>
+  <p class="secnote">A concept: providers registered with NASA to help offerors prepare compliant responses, listed by
+  specialty so that small and first-time bidders can afford to compete. A registration is a listing, not a NASA endorsement.</p>
+  <div class="rt">
+    <svg width="88" height="88" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="RiskThing logo">
+      <rect x="10" y="10" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="10" width="30" height="30" fill="#E57373" rx="4"/><rect x="80" y="10" width="30" height="30" fill="#E57373" rx="4"/>
+      <rect x="10" y="45" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="45" width="30" height="30" fill="#FADE66" rx="4"/><rect x="80" y="45" width="30" height="30" fill="#E57373" rx="4"/>
+      <rect x="10" y="80" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="80" width="30" height="30" fill="#94C880" rx="4"/><rect x="80" y="80" width="30" height="30" fill="#FADE66" rx="4"/>
+    </svg>
+    <div>
+      <span class="vetted">registered provider · concept</span>
+      <h3 style="margin-top:8px">RiskThing</h3>
+      <p class="tagline">Catch the preventable. Cultivate the possible.</p>
+      <p>83 of this draft RFP's 2,995 requirements mention risk, and <span class="rid">CLDC-116</span> is an entire
+      Risk Management Plan deliverable. RiskThing helps CLDC responders organize, communicate, and mitigate
+      their risks, from RFP requirement to closure, with the authority, audit, and export-control guarantees
+      that regulated industries require.</p>
+      <a class="cta" href="https://riskthing.com" target="_blank" rel="noopener">riskthing.com →</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>About this explorer.</b> An independent, reproducible rendering of the requirements in NASA's
+  Commercial LEO Destination Contract (CLDC) draft RFP. Source: SAM.gov notice
+  <a href="https://sam.gov/workspace/contract/opp/19a8a55c066441ef891e33bac770dd9d/view" target="_blank" rel="noopener">80JSC026R0021DRFP</a>,
+  attachment “03_CLDC Integrated DRD July 2026.pdf” (246 pages).<br>
+  SHA-256 <code>443c2cea…71df3e0</code> · <a href="https://github.com/interplanetarychris/cldc-requirements" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;vertical-align:-3px"><svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg> extraction code &amp; JSONL registers</a> · verbatim source language is authoritative; all classifications are reviewable analysis.</p>
+  <p style="display:flex;align-items:center;gap:9px;margin-top:18px">
+    <svg width="22" height="22" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="border-radius:4px">
+      <rect x="10" y="10" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="10" width="30" height="30" fill="#E57373" rx="4"/><rect x="80" y="10" width="30" height="30" fill="#E57373" rx="4"/>
+      <rect x="10" y="45" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="45" width="30" height="30" fill="#FADE66" rx="4"/><rect x="80" y="45" width="30" height="30" fill="#E57373" rx="4"/>
+      <rect x="10" y="80" width="30" height="30" fill="#94C880" rx="4"/><rect x="45" y="80" width="30" height="30" fill="#94C880" rx="4"/><rect x="80" y="80" width="30" height="30" fill="#FADE66" rx="4"/>
+    </svg>
+    <span>Concept by <a href="https://riskthing.com" target="_blank" rel="noopener">RiskThing.com</a></span>
+  </p>
+</div></footer>
+
+<div id="baseline"><svg width="14" height="14" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="border-radius:3px;vertical-align:-2px;margin-right:5px"><rect x="10" y="10" width="30" height="30" fill="#94C880" rx="6"/><rect x="45" y="10" width="30" height="30" fill="#E57373" rx="6"/><rect x="80" y="10" width="30" height="30" fill="#E57373" rx="6"/><rect x="10" y="45" width="30" height="30" fill="#94C880" rx="6"/><rect x="45" y="45" width="30" height="30" fill="#FADE66" rx="6"/><rect x="80" y="45" width="30" height="30" fill="#E57373" rx="6"/><rect x="10" y="80" width="30" height="30" fill="#94C880" rx="6"/><rect x="45" y="80" width="30" height="30" fill="#94C880" rx="6"/><rect x="80" y="80" width="30" height="30" fill="#FADE66" rx="6"/></svg><a href="https://riskthing.com" target="_blank" rel="noopener" style="color:var(--ink2)">CONCEPT BY RISKTHING.COM</a> · DRAFT RFP BASELINE (80JSC026R0021DRFP · JULY 2026) · MACHINE-CLASSIFIED FIRST PASS · <a href="https://sam.gov/workspace/contract/opp/19a8a55c066441ef891e33bac770dd9d/view" target="_blank" rel="noopener" style="color:var(--accent-ink)">OFFICIAL RFP ON SAM.GOV</a></div>
+<div id="tt"></div>
+<div id="drawer"><button class="close" onclick="drawer.classList.remove('open')">esc ✕</button><div id="dbody"></div></div>
+
+
+<script>
+async function boot(){
+const D=await (await fetch('data/explorer.json')).json();
+const $=s=>document.querySelector(s);
+const famTitle=Object.fromEntries(D.fams.map(f=>[f.id,f.t]));
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* theme */
+const root=document.documentElement;
+$('#themeBtn').onclick=()=>{const cur=root.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');root.dataset.theme=cur==='dark'?'light':'dark';drawTreemap();};
+
+/* count-up */
+const ease=t=>1-Math.pow(1-t,3);
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const end=+el.dataset.count,t0=performance.now(),dur=matchMedia('(prefers-reduced-motion: reduce)').matches?1:900;
+  const tick=t=>{const p=Math.min(1,(t-t0)/dur);el.textContent=Math.round(end*ease(p)).toLocaleString();if(p<1)requestAnimationFrame(tick)};
+  requestAnimationFrame(tick);
+});
+document.querySelectorAll('.stat').forEach(s=>s.onclick=()=>location.hash='#'+s.dataset.go);
+
+/* tooltip */
+const tt=$('#tt');
+function showTT(e,html){tt.innerHTML=html;tt.style.display='block';moveTT(e)}
+function moveTT(e){const w=tt.offsetWidth;tt.style.left=Math.min(innerWidth-w-14,e.clientX+14)+'px';tt.style.top=(e.clientY+14)+'px'}
+function hideTT(){tt.style.display='none'}
+
+/* treemap (squarify) */
+function squarify(items,x,y,w,h,out){
+  if(!items.length)return;
+  if(items.length===1){out.push({...items[0],x,y,w,h});return}
+  const total=items.reduce((a,b)=>a+b.v,0);
+  let i=1,best=Infinity;
+  const vert=w<h;
+  while(i<=items.length){
+    const grp=items.slice(0,i),gs=grp.reduce((a,b)=>a+b.v,0);
+    const side=vert?w:h, breadth=(gs/total)*(vert?h:w);
+    let worst=0;
+    for(const it of grp){const len=(it.v/gs)*side;worst=Math.max(worst,Math.max(breadth/len,len/breadth))}
+    if(worst<=best){best=worst;i++}else break;
+  }
+  const n=Math.max(1,i-1),grp=items.slice(0,n),gs=grp.reduce((a,b)=>a+b.v,0);
+  const breadth=(gs/total)*(vert?h:w);
+  let off=0;
+  for(const it of grp){
+    const len=(it.v/gs)*(vert?w:h);
+    if(vert)out.push({...it,x:x+off,y,w:len,h:breadth});else out.push({...it,x,y:y+off,w:breadth,h:len});
+    off+=len;
+  }
+  if(vert)squarify(items.slice(n),x,y+breadth,w,h-breadth,out);
+  else squarify(items.slice(n),x+breadth,y,w-breadth,h,out);
+}
+function dtColor(dt){const v=getComputedStyle(root);
+  if(dt==='1'||dt==='1/3')return v.getPropertyValue('--t1').trim();
+  if(dt==='2'||dt==='2/3')return v.getPropertyValue('--t2').trim();
+  return v.getPropertyValue('--t3').trim();}
+function drawTreemap(){
+  const svg=$('#treemap');const W=svg.clientWidth||1130,H=420;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const items=D.fams.filter(f=>f.leaf&&f.n>0).map(f=>({id:f.id,t:f.t,dt:f.dt,v:f.n})).sort((a,b)=>b.v-a.v);
+  const out=[];squarify(items,0,0,W,H,out);
+  let s=`<defs><pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="transparent"/><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/></pattern></defs>`;
+  for(const c of out){
+    const mixed=c.dt&&c.dt.includes('/');
+    s+=`<rect class="cell" x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="${dtColor(c.dt)}" rx="3" data-id="${c.id}" data-t="${esc(c.t)}" data-n="${c.v}" data-dt="${c.dt||'—'}"/>`;
+    if(mixed)s+=`<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="url(#hatch)" rx="3" pointer-events="none"/>`;
+    if(c.w>68&&c.h>26)s+=`<text x="${c.x+7}" y="${c.y+17}" font-size="10.5" fill="rgba(255,255,255,.92)">${c.id.replace('CLDC-','')}</text>`;
+    if(c.w>110&&c.h>44)s+=`<text x="${c.x+7}" y="${c.y+31}" font-size="9" fill="rgba(255,255,255,.6)">${esc(c.t.slice(0,Math.floor(c.w/6)))}</text>`;
+  }
+  svg.innerHTML=s;
+  svg.querySelectorAll('rect.cell').forEach(r=>{
+    r.addEventListener('mousemove',e=>showTT(e,`<div class="t1">${r.dataset.id} · Type ${r.dataset.dt}</div>${esc(r.dataset.t)}<br><b>${r.dataset.n}</b> requirements`));
+    r.addEventListener('mouseleave',hideTT);
+    r.addEventListener('click',()=>{hideTT();$('#fFam').value=r.dataset.id;applyFilters();location.hash='#browse'});
+  });
+}
+drawTreemap();addEventListener('resize',drawTreemap);
+
+/* mini bars */
+function bars(el,obj,color,order){
+  const entries=order?order.map(k=>[k,obj[k]||0]):Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(...entries.map(e=>e[1]));
+  el.innerHTML=entries.map(([k,v])=>`<div class="mrow"><span class="k">${esc(k)}</span><span class="bar" style="width:${(v/max)*130}px;background:${color}"></span><span class="v">${v.toLocaleString()}</span></div>`).join('');
+}
+bars($('#actorBars'),D.agg.actor,'var(--t1)');
+bars($('#modBars'),D.agg.mod,'var(--t2)');
+bars($('#secBars'),D.agg.sec,'var(--t3)');
+
+/* echo */
+const strip=fams=>{const all=D.fams.filter(f=>f.kind!=='top_level'||!f.parent).filter(f=>f.id!=='CLDC-GEN').map(f=>f.id);
+  return `<div class="dotstrip">${all.map(id=>`<span class="dot${fams.includes(id)?' on':''}" title="${id}"></span>`).join('')}</div>`};
+$('#echoRows').innerHTML=D.agg.echo.map(e=>
+  `<div class="erow"><div class="txt">"${esc(e.t)}${e.t.length>=110?'...':''}"</div>
+   <div class="meta"><span class="ebar" style="width:${e.n*3.2}px"></span><span class="n">×${e.n} DRDs</span></div>${strip(e.fams)}</div>`).join('');
+
+/* browse */
+const selFam=$('#fFam'),selActor=$('#fActor'),selMod=$('#fMod'),selSec=$('#fSec');
+[...new Set(D.reqs.map(r=>r.fam))].sort().forEach(f=>selFam.add(new Option(`${f} — ${famTitle[f]||''}`.slice(0,42),f)));
+[...new Set(D.reqs.map(r=>r.actor))].sort().forEach(a=>selActor.add(new Option(a,a)));
+[...new Set(D.reqs.map(r=>r.mod))].sort().forEach(m=>selMod.add(new Option(m,m)));
+[...new Set(D.reqs.map(r=>r.sec))].filter(Boolean).sort().forEach(s=>selSec.add(new Option(s,s)));
+function applyFilters(){
+  const q=$('#q').value.toLowerCase(),f=selFam.value,a=selActor.value,m=selMod.value,s=selSec.value;
+  const hits=D.reqs.filter(r=>(!f||r.fam===f)&&(!a||r.actor===a)&&(!m||r.mod===m)&&(!s||r.sec===s)
+    &&(!q||(r.a+' '+r.v+' '+r.id).toLowerCase().includes(q)));
+  $('#rcount').textContent=`${hits.length} of ${D.reqs.length} records${q||f||a||m||s?' (filtered)':''}`;
+  $('#rows').innerHTML=hits.slice(0,120).map((r,i)=>
+    `<tr class="r" data-i="${D.reqs.indexOf(r)}"><td><span class="rid">${r.id}</span></td><td>${esc(r.a)}</td>
+     <td><span class="tag">${r.actor}</span></td><td><span class="tag ${r.mod}">${r.mod}</span></td>
+     <td style="color:var(--ink2)">${esc(r.sec)}</td><td class="prov">${r.p}</td></tr>`).join('')
+    +(hits.length>120?`<tr><td colspan="6" style="color:var(--ink3);font-family:var(--mono);font-size:11px">…${hits.length-120} more, narrow with search or facets</td></tr>`:'');
+  document.querySelectorAll('tr.r').forEach(tr=>tr.onclick=()=>openDrawer(D.reqs[+tr.dataset.i]));
+}
+['input','change'].forEach(ev=>{$('#q').addEventListener(ev,applyFilters);[selFam,selActor,selMod,selSec].forEach(s=>s.addEventListener(ev,applyFilters))});
+applyFilters();
+
+/* drawer */
+const drawer=$('#drawer');
+function openDrawer(r){
+  $('#dbody').innerHTML=`
+    <div class="kicker" style="margin-bottom:4px">REQUIREMENT</div>
+    <h2 style="font-family:var(--mono);font-size:19px">${r.id}</h2>
+    <div class="kv">
+      <span class="k">Family</span><span><span class="rid">${r.fam}</span> — ${esc(famTitle[r.fam]||'')}</span>
+      <span class="k">Actor</span><span>${r.actor}</span>
+      <span class="k">Modality</span><span>${r.mod}</span>
+      <span class="k">Baseline</span><span>draft_rfp <span class="chip policy" title="Machine-classified; not yet human-reviewed">policy-derived</span></span>
+    </div>
+    <div class="kicker" style="margin:18px 0 4px">ANALYSIS TEXT</div>
+    <p style="font-size:14.5px">${esc(r.a)}</p>
+    <div class="kicker" style="margin:18px 0 0">VERBATIM SOURCE — AUTHORITATIVE</div>
+    <div class="verbatim">${esc(r.v)}${r.v.length>=300?'…':''}</div>
+    <div class="prov">${r.fam} · ${esc(r.sec)} · PDF PAGE ${r.p} · SHA-256 443c2cea…71df3e0 ✓</div>`;
+  drawer.classList.add('open');
+}
+addEventListener('keydown',e=>{if(e.key==='Escape')drawer.classList.remove('open')});
+
+/* references */
+const maxRef=D.refs[0].n;
+$('#refRows').innerHTML=D.refs.map((r,i)=>
+  `<div class="refrow" data-i="${i}"><div class="top">
+     <span class="doc">${esc(r.doc||'(unresolved)')}</span>
+     <span style="color:var(--ink2);font-size:12.5px;flex:1">${esc(r.title)}</span>
+     <span class="rbar" style="width:${(r.n/maxRef)*160}px"></span><span class="n" style="font-family:var(--mono);font-size:12px;color:var(--ink2)">${r.n}×</span></div>
+   <div class="exp">${r.idv.length>1?`<div>Observed identifier variants (preserved, not merged): <b>${r.idv.map(esc).join(' · ')}</b></div>`:''}
+     <div>Cited by ${r.fams.length} famil${r.fams.length===1?'y':'ies'}:</div>
+     <div class="famchips">${r.fams.map(f=>`<span class="chip">${f}</span>`).join('')}</div></div></div>`).join('')
+  ;
+document.querySelectorAll('.refrow').forEach(el=>el.onclick=()=>el.classList.toggle('open'));
+
+/* anomalies */
+$('#anomRows').innerHTML=D.anoms.filter(a=>a.type!=='extraction_repair').map(a=>
+  `<div class="arow"><span class="st ${a.status==='open'?'open':'ok'}">${a.status.toUpperCase()}</span>
+   <span class="rid">${a.fam||'—'}</span>
+   <span>${a.type==='suspected_alias'?`Body heading prints <b>${a.printed}</b>; official register says <b>${a.official}</b> (PDF p. ${a.page})`:esc(a.d)}</span></div>`).join('')
+  +`<div class="arow"><span class="st ok">REPAIRED</span><span class="rid">×54</span><span>Extraction repairs: 41 page-break joins, 13 same-page fragment joins — each recorded with original Docling refs.</span></div>`;
+
+/* attachments */
+const ATTS=[['L-01','Price Template','price-template.schema.json'],['L-02','Past Performance Matrix','past-performance.schema.json'],
+ ['L-04','Contractor Responsibility Matrix','responsibility-matrix.schema.json'],['L-07','Corporate Contribution Worksheet','corporate-contribution.schema.json'],
+ ['L-08','Business Case Analysis Template','business-case.schema.json']];
+$('#attRows').innerHTML=ATTS.map(([n,t,s])=>
+  `<div class="card att"><div class="xls">XLSX</div><div>
+    <div class="nm"><b>Attachment ${n}</b> — ${t}.xlsx</div>
+    <div class="schema">↳ machine-readable: ${s} <span class="chip mock">concept</span></div></div></div>`).join('');
+
+/* industry day */
+const PARTS=[
+ ['Orbital Habitats Inc.','Prime — full free-flyer destination','Seeking: payload airlock partner, ECLSS supplier'],
+ ['Starfall Dynamics','Prime — crewed module + cargo services','Offering: rideshare berths, thermal-vacuum test capacity'],
+ ['Meridian Life Systems','Subsystem — life support & medical','Seeking: prime partnerships (CLDC-115.x, CLDC-116 scope)'],
+ ['Kestrel Assurance Group','Services — safety & mission assurance','Offering: S&MA staffing, verification closure support'],
+];
+$('#pcards').innerHTML=PARTS.map(([n,i,s])=>
+  `<div class="card pcard"><h3>${n}</h3><div class="intent">${i}</div><div class="scopeln">${s}</div></div>`).join('');
+
+}
+boot();
+</script>
+</body>
+</html>

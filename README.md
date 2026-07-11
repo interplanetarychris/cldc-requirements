@@ -89,20 +89,51 @@ Keep two linked layers so the word "count" remains auditable:
 
 Report both counts. Never present a candidate modal-word count as an exact requirement count.
 
-## Proposed outputs
+## Outputs
 
-Create these only as the extraction reaches them:
+All of the following were produced by the completed first pass (2026-07-10). Create or regenerate them only via `extract.py`:
 
 ```text
 data/manifest.json          source fingerprint, policy, tool versions, and counts
 data/families.json          DRD hierarchy and metadata
 data/source-items.jsonl     lossless, addressable source items
 data/requirements.jsonl     reviewed atomic requirements
+data/references.jsonl       deduplicated register of cited external documents
 data/anomalies.jsonl        numbering, extraction, ambiguity, and conflict findings
 extract.py                  minimal reproducible extraction/normalization script
+site-build.py               builds docs/data/explorer.json from the registers
+docs/                       static CLDC Explorer site, served by GitHub Pages
 ```
 
 Generated Docling and layout files belong under `tmp/` and should not be committed.
+
+## CLDC Explorer
+
+`docs/` holds a static, single-page explorer over these registers, published with GitHub Pages:
+<https://interplanetarychris.github.io/cldc-requirements/> (live once the repository is public and
+Pages is enabled from the `main` branch `/docs` folder).
+
+The theory: the authoritative artifact is a 246-page PDF, and today every audience re-reads it by
+hand, with offerors, NASA, and the public each building a private index of the same text. The
+explorer renders the extracted register in one shared interface instead. Every requirement is
+searchable and filterable; every record links to its DRD family, its cited external documents, and
+the exact source page; the treemap, recurrence, and reference views show at a glance what the
+registers otherwise reveal only through queries. It also mocks what a more modern solicitation
+could publish alongside the PDF: machine-readable response templates, an industry-day roster, an
+assistance-provider registry, and agent-consumable formats (markdown mirrors, raw JSONL, an MCP
+server).
+
+The explorer is a citizen concept built from the public record, not an official NASA product. A
+persistent banner on every page says so and links to the SAM.gov notice. Verbatim source language
+remains the authority; everything else is reviewable analysis, and the machine-classified counting
+caveats above apply to every figure shown.
+
+The page fetches `docs/data/explorer.json` at load. Rebuild that payload after any extraction
+change:
+
+```bash
+python3 site-build.py
+```
 
 ## Stable identifiers
 
@@ -210,9 +241,31 @@ shasum -a 256 "$PDF"
 
 Docling fields worth retaining include `orig`, `text`, `label`, `prov`, `bbox`, `marker`, `enumerated`, `parent`, and `self_ref`.
 
+## First-pass extraction results (2026-07-10)
+
+The first pass described below is complete. `extract.py` (Python standard library only, reading the Docling JSON and `pdftotext -layout` intermediates) regenerates every output deterministically in about 4 seconds once `tmp/` exists:
+
+```bash
+python3 extract.py --pdf "/path/to/03_CLDC+Integrated+DRD+July+2026.pdf"
+```
+
+The script ends with a `validate()` pass that asserts every check in the runnable-check list below; a run that completes has passed all of them. Note the downloaded attachment filename contains literal `+` characters.
+
+Headline counts, reconciled against actual JSONL line counts:
+
+- 5,031 source items covering all 98 official identifiers plus `CLDC-GEN` (general provisions, pages 2-6).
+- 2,995 mandatory atomic requirements under the default counting policy. This is a **machine-classified first pass**: `review_status: "confirmed"` here means "confirmed by mechanical application of the counting policy," not human review. Treat the headline number as a policy-derived candidate count until records are individually reviewed.
+- 60 anomaly records: 41 page-break joins, 13 same-page fragment joins, 4 suspected CLDC-214.x → CLDC-211.x aliases (open), 1 CLDC-101 numbering anomaly (open), 1 ITAR/EAR counting exclusion (resolved by policy). These map exactly to the four known source anomalies above plus mechanical repairs; no new anomaly classes surfaced.
+
+Source-item classification: 707 explicit mandatory, 2,169 inherited mandatory, 1,744 descriptive, 268 reference, 56 permission, 43 commitment, 39 advisory, 5 quoted.
+
+Requirement breakdowns: actor — contractor 2,925, Government 33, shared 22, subcontractor 12, offeror 3; modality — inherited 2,064, `shall` 662, imperative 171, `required` 65, `must` 33. The nine families with zero requirements are all grouping parents whose content lives in their children.
+
+The 268 reference-classified source items were subsequently deduplicated into `data/references.jsonl`: 104 register records covering 94 canonical documents plus 10 unresolved citations (title-only, URL-only, or fragmentary text without a formal identifier — retained verbatim, not dropped). Every reference instance reconciles into the register exactly once, and identifier/title/revision variants observed in the source (e.g. NASA-STD-8739.8 versus 8739.8B) are grouped under one canonical document with the variants recorded rather than silently merged.
+
 ## Fresh-agent starting task
 
-Start with deterministic source normalization, not semantic atomization:
+The first pass below is **complete**; the instructions are retained verbatim so anyone can independently re-derive the outputs from the public PDF. Start with deterministic source normalization, not semantic atomization:
 
 1. Read this README, obtain `03_CLDC Integrated DRD July 2026.pdf` from the linked SAM.gov notice, and verify its SHA-256 before processing.
 2. Reproduce the Docling JSON and layout-text intermediates under `tmp/`.
@@ -242,13 +295,38 @@ Do not add a database, web application, ontology, or requirements-management int
 
 ## Questions this data should eventually answer
 
-- How many confirmed mandatory obligations exist, and under which counting policy?
-- How many are content, delivery, schedule, format, reporting, approval, process, interface, safety, security, records, or verification obligations?
-- Which requirements specify outcomes versus implementation methods?
-- Which obligations recur across DRDs, and how much recurring delivery effort do they imply?
-- Which requirements depend on external standards, Government-furnished services, approvals, or future negotiation?
-- Which statements are ambiguous, contradictory, duplicated, incomplete, or incorrectly numbered?
-- Which design elements, risks, verification methods, evidence artifacts, and closure decisions trace to each requirement?
-- What changes between solicitation, proposal, negotiated contract, modification, and approved provider baselines?
+First-pass answers from the current registers follow each question; unanswered items are future work.
+
+**How many confirmed mandatory obligations exist, and under which counting policy?**
+
+> **2,995**, under the default counting policy in this README, applied mechanically. Human review of individual records is still pending, so report it as a policy-derived count, not a settled baseline.
+
+**How many are content, delivery, schedule, format, reporting, approval, process, interface, safety, security, records, or verification obligations?**
+
+> Partially answerable today by DRD section: content (Contents/Scope) 1,994; format 330; schedule (Initial Submission + Submission Frequency) 248; maintenance/change 179; distribution 154; other 90. Finer semantic categories (approval, safety, interface, verification) are not yet classified.
+
+**Which requirements specify outcomes versus implementation methods?**
+
+> Not yet classified. The register preserves verbatim text, so this can be added as a review dimension without re-extraction.
+
+**Which obligations recur across DRDs, and how much recurring delivery effort do they imply?**
+
+> 226 distinct atomic texts recur, accounting for 888 requirement instances (~30% of the total). The heaviest boilerplate: the maintenance-by-resubmission clause (68 DRDs), NASA CO/COR distribution list entries (53 and 50), complete-reissue-with-change-log (39), clean-copy-plus-redline dual submittal (31), and contractor-format-per-DFCD (36). Recurring delivery effort is therefore dominated by per-DRD resubmission and distribution mechanics.
+
+**Which requirements depend on external standards, Government-furnished services, approvals, or future negotiation?**
+
+> 268 reference instances resolve to **94 unique external documents** in `data/references.jsonl` (plus 10 unresolved citations): 17 CLDP program documents, 17 NASA-STDs, 13 NPRs/NPDs, 3 JPRs, 13 FAR/NFS clauses, and 26 other identifiers (NIST, OMB, CFR, SAE, GAO, and similar), with 2 internal DRD cross-references. Citation weight is heavily concentrated in CLDP program documents: CLDP-REQ-1130 (Requirements and Standards for the CLDP) is incorporated from 30 DRD families, CLDP-STD-1150 (Operations Standards) from 22, CLDP-PLN-3017 (Utilization Integration Plan) from 17, CLDP-PLN-2000 (Certification Plan) from 15, and CLDP-PLN-2110 (Mission Integration Plan) from 11 — so the effective requirement load depends materially on documents outside this PDF. Most NASA-STDs are cited once each.
+
+**Which statements are ambiguous, contradictory, duplicated, incomplete, or incorrectly numbered?**
+
+> See `data/anomalies.jsonl`: 4 open suspected aliases (body headings CLDC-214.1-.4 versus official CLDC-211.1-.4), 1 open numbering anomaly (CLDC-101 Contents starting at item 19), 1 counting exclusion (modal language inside required ITAR/EAR notice text), and 54 documented extraction repairs. Textual duplication is quantified in the recurrence figures above.
+
+**Which design elements, risks, verification methods, evidence artifacts, and closure decisions trace to each requirement?**
+
+> Not yet. The `links` field exists on every record and is empty; populate it only when a real consumer needs a given link type.
+
+**What changes between solicitation, proposal, negotiated contract, modification, and approved provider baselines?**
+
+> Nothing to compare yet: only the `draft_rfp` baseline exists. The ID and `supersedes` rules above define how future baselines diff against it.
 
 The objective is not merely a bigger list. It is a defensible chain from exact source language to interpretation, implementation, evidence, risk, and change history.
