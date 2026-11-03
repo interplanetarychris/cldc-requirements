@@ -109,9 +109,8 @@ Generated Docling and layout files belong under `tmp/` and should not be committ
 
 ## CLDC Explorer
 
-`docs/` holds a static, single-page explorer over these registers, published with GitHub Pages:
-<https://interplanetarychris.github.io/cldc-requirements/> (live once the repository is public and
-Pages is enabled from the `main` branch `/docs` folder).
+`docs/` holds a static, single-page explorer over these registers, published with GitHub Pages
+from the `main` branch `/docs` folder: <https://cldc-requirements.chrislewicki.com/>.
 
 The theory: the authoritative artifact is a 246-page PDF, and today every audience re-reads it by
 hand, with offerors, NASA, and the public each building a private index of the same text. The
